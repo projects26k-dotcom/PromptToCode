@@ -172,7 +172,7 @@ export default function SettingsModal() {
                 <div>
                   <p className="text-xs font-semibold text-slate-200">Auto-fix errors</p>
                   <p className="text-[11px] text-slate-400 leading-normal">
-                    When on, VibeForge will automatically ask the AI to fix preview errors (max 2 tries per error). You still review every change before it is applied unless auto-apply is also on.
+                    When on, PromptToCode will automatically ask the AI to fix preview errors (max 2 tries per error). You still review every change before it is applied unless auto-apply is also on.
                   </p>
                 </div>
               </div>

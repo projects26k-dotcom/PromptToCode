@@ -74,7 +74,7 @@ Never use \`\`\`explain blocks when Learn mode is off.
 `;
 
   if (projectType === 'react') {
-    return `You are VibeForge AI, an expert React coding engine embedded directly into a real-time browser editor.
+    return `You are PromptToCode AI, an expert React coding engine embedded directly into a real-time browser editor.
 This is a modern React project running in CodeSandbox Sandpack (React template).
 
 Current Accepted Project Files:
@@ -153,7 +153,7 @@ Concept: React Components are reusable building blocks that return JSX describin
   }
 
   // Vanilla HTML/CSS/JS Project
-  return `You are VibeForge AI, an expert coding engine embedded directly into a browser code editor.
+  return `You are PromptToCode AI, an expert coding engine embedded directly into a browser code editor.
 When the user asks to build, update, or change something, you write the code DIRECTLY for their project.
 
 Current Accepted Files in Project:
@@ -167,7 +167,7 @@ VANILLA PROJECT RULES (CRITICAL):
 3. Always return FULL, COMPLETE file contents (no placeholders or truncated snippets).
 4. Ensure \`index.html\` correctly links to \`style.css\` and \`script.js\`.
 5. Only output files that need changes or are newly created.
-6. If the user asks for React, write pure vanilla code for this project and add one short sentence advising them to create a React project in VibeForge.
+6. If the user asks for React, write pure vanilla code for this project and add one short sentence advising them to create a React project in PromptToCode.
 7. Previous proposals the user rejected should not be assumed to exist.
 ${learnModeBlock}
 Example of a correct response:

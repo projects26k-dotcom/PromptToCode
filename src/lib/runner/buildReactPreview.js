@@ -25,7 +25,7 @@ export function buildReactPreviewHtml(files = {}) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VibeForge React Runner</title>
+  <title>PromptToCode React Runner</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.26.4/babel.min.js"></script>
@@ -100,7 +100,7 @@ export function buildReactPreviewHtml(files = {}) {
         try {
           var formatted = Array.prototype.slice.call(rawArgs).map(formatArg).join(' ');
           window.parent.postMessage({
-            source: 'vibeforge-preview',
+            source: 'prompttocode-preview',
             type: 'console',
             level: level,
             message: formatted
@@ -142,7 +142,7 @@ export function buildReactPreviewHtml(files = {}) {
 
         try {
           window.parent.postMessage({
-            source: 'vibeforge-preview',
+            source: 'prompttocode-preview',
             type: 'error',
             kind: kind || 'runtime',
             file: file || '',
@@ -480,7 +480,7 @@ export function buildReactPreviewHtml(files = {}) {
 
         // Notify parent that preview initialized cleanly
         window.parent.postMessage({
-          source: 'vibeforge-preview',
+          source: 'prompttocode-preview',
           type: 'ready',
           level: 'info'
         }, '*');

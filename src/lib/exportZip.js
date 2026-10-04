@@ -2,14 +2,14 @@ import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 
 export function slugify(text) {
-  return (text || 'vibeforge-project')
+  return (text || 'prompttocode-project')
     .toString()
     .toLowerCase()
     .trim()
     .replace(/\s+/g, '-')
     .replace(/[^\w-]+/g, '')
     .replace(/--+/g, '-')
-    .replace(/^-+|-+$/g, '') || 'vibeforge-project';
+    .replace(/^-+|-+$/g, '') || 'prompttocode-project';
 }
 
 /**
@@ -176,7 +176,7 @@ export default defineConfig({
       'README.md',
       `# ${projectName} (React + Vite)
 
-Built with **VibeForge** — *Describe it. Forge it. Run it.*
+Built with **PromptToCode** — *Describe it. Build it. Run it.*
 
 ## 🚀 Running Locally
 
@@ -232,7 +232,7 @@ npm run build
       'README.md',
       `# ${projectName} (Vanilla Web)
 
-Built with **VibeForge** — *Describe it. Forge it. Run it.*
+Built with **PromptToCode** — *Describe it. Build it. Run it.*
 
 ## 🚀 Running Locally
 

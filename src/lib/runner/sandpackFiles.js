@@ -1,6 +1,6 @@
 const DEFAULT_PACKAGE_JSON = JSON.stringify(
   {
-    name: 'react-vibeforge',
+    name: 'react-prompttocode',
     version: '1.0.0',
     main: '/index.jsx',
     dependencies: {
@@ -18,7 +18,7 @@ const DEFAULT_PUBLIC_HTML = `<!DOCTYPE html>
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>React VibeForge</title>
+    <title>React PromptToCode</title>
   </head>
   <body>
     <div id="root"></div>

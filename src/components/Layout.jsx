@@ -95,7 +95,7 @@ export default function Layout() {
               </div>
             </div>
             <span className="font-bold text-base tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-400 bg-clip-text text-transparent hidden sm:inline">
-              VibeForge
+              PromptToCode
             </span>
           </div>
 

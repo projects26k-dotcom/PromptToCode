@@ -99,7 +99,7 @@ export default function PreviewPanel() {
     const handleMessage = (event) => {
       if (
         event.data &&
-        event.data.source === 'vibeforge-preview'
+        (event.data.source === 'prompttocode-preview' || event.data.source === 'vibeforge-preview')
       ) {
         if (event.data.type === 'ready') {
           dismissError();
@@ -139,7 +139,7 @@ export default function PreviewPanel() {
 
           // Dev diagnostic logging (development mode only)
           if (import.meta.env?.DEV) {
-            console.log('[VibeForge Preview Bridge Error]:', {
+            console.log('[PromptToCode Preview Bridge Error]:', {
               kind,
               file,
               message,
@@ -559,7 +559,7 @@ export default function PreviewPanel() {
               key={reloadKey}
               ref={iframeRef}
               srcDoc={previewHtml}
-              title="VibeForge Preview"
+              title="PromptToCode Preview"
               sandbox="allow-scripts allow-modals allow-forms allow-popups"
               className="h-full w-full flex-1 min-h-0 border-0 bg-slate-950"
               style={{ height: '100%', width: '100%' }}

@@ -1,6 +1,6 @@
 import Dexie from 'dexie';
 
-export const db = new Dexie('VibeForgeDB');
+export const db = new Dexie('PromptToCodeDB');
 
 db.version(1).stores({
   projects: 'id, name, projectType, updatedAt, createdAt',

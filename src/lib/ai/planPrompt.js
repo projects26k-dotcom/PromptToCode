@@ -35,7 +35,7 @@ export function buildPlanSystemPrompt({ files = {}, activeFile = null, projectTy
       .join('\n\n')}`;
   }
 
-  return `You are VibeForge Plan Architect.
+  return `You are PromptToCode Plan Architect.
 Your task is to propose a concise, high-level implementation plan for the user's request before writing code.
 
 CRITICAL INSTRUCTIONS:

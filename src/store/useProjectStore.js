@@ -9,14 +9,14 @@ const defaultFiles = {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Hello VibeForge</title>
+    <title>Hello PromptToCode</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <div class="container">
       <div class="card">
-        <h1>✨ Hello, VibeForge!</h1>
-        <p class="tagline">Describe it. Forge it. Run it.</p>
+        <h1>✨ Hello, PromptToCode!</h1>
+        <p class="tagline">Describe it. Build it. Run it.</p>
         <button id="action-btn">Click for Magic</button>
         <div id="output"></div>
       </div>
@@ -94,14 +94,14 @@ button:hover {
   min-height: 1.5rem;
 }`,
 
-  'script.js': `// Welcome to VibeForge!
+  'script.js': `// Welcome to PromptToCode!
 const btn = document.getElementById('action-btn');
 const output = document.getElementById('output');
 
 const quotes = [
-  '⚡ Code forged with pure vibes.',
+  '⚡ Code crafted with AI precision.',
   '🚀 Building the future one prompt at a time.',
-  '✨ Describe it. Forge it. Run it.',
+  '✨ Describe it. Build it. Run it.',
   '💡 From imagination to running code instantly.'
 ];
 

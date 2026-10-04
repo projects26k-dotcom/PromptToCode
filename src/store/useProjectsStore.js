@@ -9,7 +9,7 @@ import { useSnapshotStore } from './useSnapshotStore';
 import { createSnapshot, listSnapshots, deleteSnapshotsForProject } from '../lib/snapshots';
 
 let autoSaveTimer = null;
-const CURRENT_PROJ_KEY = 'vibeforge_current_project_id';
+const CURRENT_PROJ_KEY = 'prompttocode_current_project_id';
 
 export const useProjectsStore = create((set, get) => ({
   projects: [],

@@ -4,7 +4,7 @@ import { useProjectStore } from '../store/useProjectStore';
 
 const DEFAULT_PACKAGE_JSON = JSON.stringify(
   {
-    name: 'react-vibeforge',
+    name: 'react-prompttocode',
     version: '1.0.0',
     dependencies: {
       react: '^18.3.1',

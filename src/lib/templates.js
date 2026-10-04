@@ -16,14 +16,14 @@ export const TEMPLATES = [
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Hello VibeForge</title>
+    <title>Hello PromptToCode</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <div class="container">
       <div class="card">
-        <h1>✨ Hello, VibeForge!</h1>
-        <p class="tagline">Describe it. Forge it. Run it.</p>
+        <h1>✨ Hello, PromptToCode!</h1>
+        <p class="tagline">Describe it. Build it. Run it.</p>
         <button id="action-btn">Click for Magic</button>
         <div id="output"></div>
       </div>
@@ -99,14 +99,14 @@ button:hover {
   color: #38bdf8;
   min-height: 1.5rem;
 }`,
-      'script.js': `// Welcome to VibeForge!
+      'script.js': `// Welcome to PromptToCode!
 const btn = document.getElementById('action-btn');
 const output = document.getElementById('output');
 
 const quotes = [
-  '⚡ Code forged with pure vibes.',
+  '⚡ Code crafted with AI precision.',
   '🚀 Building the future one prompt at a time.',
-  '✨ Describe it. Forge it. Run it.',
+  '✨ Describe it. Build it. Run it.',
   '💡 From imagination to running code instantly.'
 ];
 
@@ -515,11 +515,11 @@ const list = document.getElementById('todo-list');
 const count = document.getElementById('task-count');
 const filterBtns = document.querySelectorAll('.filter-btn');
 
-let todos = JSON.parse(localStorage.getItem('vibeforge_todos') || '[]');
+let todos = JSON.parse(localStorage.getItem('prompttocode_todos') || localStorage.getItem('vibeforge_todos') || '[]');
 let currentFilter = 'all';
 
 function saveAndRender() {
-  localStorage.setItem('vibeforge_todos', JSON.stringify(todos));
+  localStorage.setItem('prompttocode_todos', JSON.stringify(todos));
   render();
 }
 
@@ -597,8 +597,8 @@ export default function App() {
   return (
     <div className="container">
       <div className="card">
-        <h1>✨ Hello, React VibeForge!</h1>
-        <p className="tagline">Describe it. Forge it. Run it.</p>
+        <h1>✨ Hello, React PromptToCode!</h1>
+        <p className="tagline">Describe it. Build it. Run it.</p>
         <button onClick={() => setCount((c) => c + 1)}>
           Count is {count}
         </button>
@@ -694,14 +694,14 @@ button:hover {
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>React VibeForge</title>
+    <title>React PromptToCode</title>
   </head>
   <body>
     <div id="root"></div>
   </body>
 </html>`,
       '/package.json': `{
-  "name": "react-vibeforge",
+  "name": "react-prompttocode",
   "version": "1.0.0",
   "dependencies": {
     "react": "^18.3.1",

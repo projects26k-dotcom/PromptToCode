@@ -58,7 +58,7 @@ export const useConsoleStore = create((set, get) => ({
         if (autoFix) {
           setAutoFix(false);
           if (import.meta.env?.DEV) {
-            console.warn('[VibeForge] Turned off auto-fix after 2 failed attempts on signature:', signature);
+            console.warn('[PromptToCode] Turned off auto-fix after 2 failed attempts on signature:', signature);
           }
         }
       }

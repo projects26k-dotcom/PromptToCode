@@ -576,7 +576,7 @@ export const useChatStore = create((set, get) => ({
 
     // Verification logging in dev mode
     if (import.meta.env.DEV) {
-      console.log(`[VibeForge AI System Prompt (${projectType})]:\n`, systemPrompt.slice(0, 200));
+      console.log(`[PromptToCode AI System Prompt (${projectType})]:\n`, systemPrompt.slice(0, 200));
     }
 
     const conversationHistory = get()

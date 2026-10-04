@@ -79,7 +79,7 @@ const CONSOLE_BRIDGE_SCRIPT = `
     try {
       var formatted = Array.prototype.slice.call(rawArgs).map(formatArg).join(' ');
       window.parent.postMessage({
-        source: 'vibeforge-preview',
+        source: 'prompttocode-preview',
         type: 'console',
         level: level,
         message: formatted
@@ -123,7 +123,7 @@ const CONSOLE_BRIDGE_SCRIPT = `
     }
 
     window.parent.postMessage({
-      source: 'vibeforge-preview',
+      source: 'prompttocode-preview',
       type: 'error',
       kind: file ? 'runtime' : 'runner',
       level: 'error',
@@ -182,7 +182,7 @@ const CONSOLE_BRIDGE_SCRIPT = `
     var stack = reason && reason.stack ? reason.stack : '';
 
     window.parent.postMessage({
-      source: 'vibeforge-preview',
+      source: 'prompttocode-preview',
       type: 'error',
       kind: 'runtime',
       level: 'error',
@@ -286,7 +286,7 @@ export function buildPreviewHtml(files = {}) {
   }
 
   // 4. Inject ready event at the bottom of the body
-  const READY_SCRIPT = `<script>try{window.parent.postMessage({source:'vibeforge-preview',type:'ready'},'*');}catch(e){}</script>`;
+  const READY_SCRIPT = `<script>try{window.parent.postMessage({source:'prompttocode-preview',type:'ready'},'*');}catch(e){}</script>`;
   if (/<\/body[^>]*>/i.test(html)) {
     html = html.replace(/<\/body[^>]*>/i, (match) => `${READY_SCRIPT}\n${match}`);
   } else {

@@ -78,7 +78,7 @@ export const useSettingsStore = create(
         set((state) => ({ isSettingsOpen: !state.isSettingsOpen })),
     }),
     {
-      name: 'vibeforge-settings',
+      name: 'prompttocode-settings',
       version: 2,
       migrate: (persistedState, version) => {
         if (!version || version < 2) {
