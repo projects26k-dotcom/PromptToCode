@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://prompttocode.dev/sitemap.xml
+Sitemap: https://prompttocode.vercel.app/sitemap.xml

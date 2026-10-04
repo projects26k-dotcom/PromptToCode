@@ -3,7 +3,7 @@
 > **Describe it. Build it. Run it.**  
 > Free, in-browser AI coding IDE. Turn natural language prompts and UI mockups into full-stack Vanilla and React applications with live previews, diff reviews, auto-fix, version timeline, and local ZIP export. Bring your own Gemini API key.
 
-🌐 **Live Demo**: [https://prompttocode.dev](https://prompttocode.dev)
+🌐 **Live Demo**: [https://prompttocode.vercel.app/](https://prompttocode.vercel.app/)
 
 ---
 
