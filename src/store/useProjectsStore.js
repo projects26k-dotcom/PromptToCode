@@ -104,6 +104,7 @@ export const useProjectsStore = create((set, get) => ({
         name,
         projectType: currentProjectType || currentMeta?.projectType || 'vanilla',
         files: projectState.files,
+        emptyFolders: projectState.emptyFolders || [],
         openTabs: projectState.openTabs,
         activeFile: projectState.activeFile,
         messages: persistedMessages,
@@ -145,6 +146,7 @@ export const useProjectsStore = create((set, get) => ({
         name: cleanName,
         projectType: template.type || 'vanilla',
         files: { ...template.files },
+        emptyFolders: [],
         openTabs: [...template.openTabs],
         activeFile: template.activeFile,
         messages: [],
@@ -200,6 +202,7 @@ export const useProjectsStore = create((set, get) => ({
 
       useProjectStore.getState().loadProjectData({
         files: proj.files || {},
+        emptyFolders: proj.emptyFolders || [],
         openTabs: proj.openTabs || (pType === 'react' ? ['/App.jsx', '/styles.css'] : ['index.html']),
         activeFile: proj.activeFile || (pType === 'react' ? '/App.jsx' : 'index.html'),
       });

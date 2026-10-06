@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import remarkBreaks from 'remark-breaks';
 import {
   User,
   Sparkles,
@@ -216,15 +218,21 @@ export default function ChatMessage({ message }) {
                     <span>{message.displayContent}</span>
                   </div>
                 ) : (
-                  <p className="whitespace-pre-wrap">{message.content}</p>
+                  <div className="markdown-content text-white text-xs leading-relaxed break-words [&_p]:mb-1.5 [&_p:last-child]:mb-0 [&_ul]:list-disc [&_ul]:pl-4 [&_ul]:space-y-1 [&_ul]:my-1.5 [&_ol]:list-decimal [&_ol]:pl-4 [&_ol]:space-y-1 [&_ol]:my-1.5 [&_li]:leading-relaxed [&_strong]:font-semibold [&_strong]:text-white [&_em]:italic [&_code]:bg-indigo-700/60 [&_code]:text-indigo-100 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded [&_code]:font-mono [&_code]:text-[11px] [&_code]:border [&_code]:border-indigo-400/30 [&_pre]:bg-slate-950/80 [&_pre]:p-2.5 [&_pre]:rounded-lg [&_pre]:border [&_pre]:border-indigo-400/20 [&_pre]:font-mono [&_pre]:text-[11px] [&_pre]:overflow-x-auto [&_pre]:my-1.5 [&_pre]:text-slate-200 [&_blockquote]:border-l-2 [&_blockquote]:border-white/40 [&_blockquote]:pl-2.5 [&_blockquote]:italic [&_blockquote]:my-1 [&_blockquote]:text-slate-100 [&_a]:text-white [&_a]:underline [&_a]:underline-offset-2 [&_a:hover]:text-indigo-200">
+                    <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>
+                      {message.content}
+                    </ReactMarkdown>
+                  </div>
                 )}
               </div>
             ) : (
               <div className="space-y-2">
                 {/* Markdown Rendered AI Response */}
                 {displayContent ? (
-                  <div className="prose prose-invert prose-xs max-w-none text-slate-200 space-y-2 [&_p]:mb-2 [&_ul]:list-disc [&_ul]:pl-4 [&_ol]:list-decimal [&_ol]:pl-4 [&_li]:mb-1 [&_strong]:text-indigo-300 [&_code]:bg-slate-800 [&_code]:text-indigo-300 [&_code]:px-1 [&_code]:py-0.5 [&_code]:rounded [&_code]:font-mono">
-                    <ReactMarkdown>{displayContent}</ReactMarkdown>
+                  <div className="markdown-content text-slate-200 text-xs leading-relaxed break-words space-y-2 [&_p]:mb-2 [&_p:last-child]:mb-0 [&_ul]:list-disc [&_ul]:pl-4 [&_ul]:space-y-1 [&_ul]:my-2 [&_ol]:list-decimal [&_ol]:pl-4 [&_ol]:space-y-1 [&_ol]:my-2 [&_li]:leading-relaxed [&_strong]:font-semibold [&_strong]:text-indigo-300 [&_em]:italic [&_em]:text-slate-300 [&_h1]:text-sm [&_h1]:font-bold [&_h1]:text-white [&_h1]:mt-3 [&_h1]:mb-1.5 [&_h1]:border-b [&_h1]:border-slate-800 [&_h1]:pb-1 [&_h2]:text-xs [&_h2]:font-bold [&_h2]:text-indigo-200 [&_h2]:mt-2.5 [&_h2]:mb-1 [&_h3]:text-xs [&_h3]:font-semibold [&_h3]:text-slate-200 [&_h3]:mt-2 [&_h3]:mb-1 [&_code]:bg-slate-800/90 [&_code]:text-indigo-300 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded [&_code]:font-mono [&_code]:text-[11px] [&_code]:border [&_code]:border-slate-700/60 [&_pre]:bg-slate-950 [&_pre]:p-2.5 [&_pre]:rounded-lg [&_pre]:border [&_pre]:border-slate-800 [&_pre]:font-mono [&_pre]:text-[11px] [&_pre]:overflow-x-auto [&_pre]:my-2 [&_pre]:text-slate-200 [&_blockquote]:border-l-2 [&_blockquote]:border-indigo-500 [&_blockquote]:pl-3 [&_blockquote]:italic [&_blockquote]:my-2 [&_blockquote]:text-slate-300 [&_a]:text-indigo-400 [&_a:hover]:text-indigo-300 [&_a]:underline [&_a]:underline-offset-2 [&_table]:w-full [&_table]:border-collapse [&_table]:border [&_table]:border-slate-800 [&_table]:my-2 [&_table]:text-[11px] [&_th]:border [&_th]:border-slate-800 [&_th]:bg-slate-800/70 [&_th]:px-2 [&_th]:py-1 [&_th]:text-left [&_th]:font-semibold [&_th]:text-slate-200 [&_td]:border [&_td]:border-slate-800 [&_td]:px-2 [&_td]:py-1 [&_td]:text-slate-300 [&_hr]:border-slate-800 [&_hr]:my-2.5">
+                    <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>
+                      {displayContent}
+                    </ReactMarkdown>
                   </div>
                 ) : rawFilePaths.length > 0 && !isStreaming ? (
                   <p className="text-slate-300 font-medium">

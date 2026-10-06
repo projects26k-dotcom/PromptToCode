@@ -17,6 +17,7 @@ import {
 import { usePendingStore } from '../store/usePendingStore';
 import { useProjectStore } from '../store/useProjectStore';
 import { useChatStore } from '../store/useChatStore';
+import { useSettingsStore } from '../store/useSettingsStore';
 import { cleanFilePath } from '../lib/ai/parseResponse';
 import { getLanguage } from '../lib/language';
 import { getDiffStats } from '../lib/diff';
@@ -25,6 +26,7 @@ export default function DiffReview() {
   const { pending, reviewingFile, acceptFile, rejectFile, updateProposed, reviewFile, closeReview } =
     usePendingStore();
   const { files } = useProjectStore();
+  const { theme } = useSettingsStore();
   const messages = useChatStore((state) => state.messages);
 
   const [sideBySide, setSideBySide] = useState(() => window.innerWidth > 960);
@@ -254,7 +256,7 @@ export default function DiffReview() {
         <DiffEditor
           height="100%"
           width="100%"
-          theme="vs-dark"
+          theme={theme === 'dark' ? 'vs-dark' : 'light'}
           language={language}
           original={currentItem.original}
           modified={currentItem.proposed}

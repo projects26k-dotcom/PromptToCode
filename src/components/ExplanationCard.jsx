@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import remarkBreaks from 'remark-breaks';
 import { ChevronDown, ChevronRight, FileCode, Lightbulb, CheckCircle2 } from 'lucide-react';
 import { useProjectStore } from '../store/useProjectStore';
 
@@ -49,7 +52,9 @@ export default function ExplanationCard({ explanation, defaultExpanded = false }
               <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400">
                 Purpose
               </span>
-              <p className="text-slate-200 font-medium">{purpose}</p>
+              <div className="text-slate-200 font-medium [&_code]:bg-slate-800 [&_code]:text-amber-300 [&_code]:px-1 [&_code]:py-0.5 [&_code]:rounded [&_code]:font-mono [&_code]:text-[11px]">
+                <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>{purpose}</ReactMarkdown>
+              </div>
             </div>
           )}
 
@@ -63,7 +68,9 @@ export default function ExplanationCard({ explanation, defaultExpanded = false }
                 {keyParts.map((bullet, idx) => (
                   <li key={idx} className="flex items-start gap-2 text-slate-300">
                     <span className="w-1.5 h-1.5 rounded-full bg-amber-400/80 mt-1.5 shrink-0" />
-                    <span>{bullet}</span>
+                    <span className="flex-1 min-w-0 [&_code]:bg-slate-800 [&_code]:text-amber-300 [&_code]:px-1 [&_code]:py-0.5 [&_code]:rounded [&_code]:font-mono [&_code]:text-[11px]">
+                      <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>{bullet}</ReactMarkdown>
+                    </span>
                   </li>
                 ))}
               </ul>
@@ -80,9 +87,9 @@ export default function ExplanationCard({ explanation, defaultExpanded = false }
                 <span className="text-[10px] uppercase font-bold tracking-wider text-amber-300/90 block mb-0.5">
                   Core Concept
                 </span>
-                <p className="text-[11px] text-amber-100/90 leading-relaxed font-normal">
-                  {concept}
-                </p>
+                <div className="text-[11px] text-amber-100/90 leading-relaxed font-normal [&_code]:bg-amber-950/80 [&_code]:text-amber-300 [&_code]:px-1 [&_code]:py-0.5 [&_code]:rounded [&_code]:font-mono [&_code]:text-[10px]">
+                  <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>{concept}</ReactMarkdown>
+                </div>
               </div>
             </div>
           )}

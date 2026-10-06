@@ -9,7 +9,11 @@ import {
   AlertTriangle,
   RotateCcw,
   History,
-  X
+  X,
+  PanelLeftClose,
+  PanelLeftOpen,
+  Sun,
+  Moon
 } from 'lucide-react';
 import FileTree from './FileTree';
 import EditorTabs from './EditorTabs';
@@ -26,7 +30,15 @@ import { useProjectsStore } from '../store/useProjectsStore';
 import { useSnapshotStore } from '../store/useSnapshotStore';
 
 export default function Layout() {
-  const { viewMode, setViewMode, openSettings } = useSettingsStore();
+  const {
+    viewMode,
+    setViewMode,
+    openSettings,
+    isSidebarCollapsed,
+    toggleSidebar,
+    theme,
+    toggleTheme
+  } = useSettingsStore();
   const { initProjects, saveCurrentProjectNow, loadError, resetCorruptedProject } = useProjectsStore();
   const {
     snapshots,
@@ -36,6 +48,17 @@ export default function Layout() {
     undoRestore,
     clearUndoRestore,
   } = useSnapshotStore();
+
+  // Sync theme with document root element
+  useEffect(() => {
+    if (theme === 'light') {
+      document.documentElement.classList.add('light-theme');
+      document.documentElement.classList.remove('dark-theme');
+    } else {
+      document.documentElement.classList.add('dark-theme');
+      document.documentElement.classList.remove('light-theme');
+    }
+  }, [theme]);
 
   // Initialize projects on app start and register beforeunload save
   useEffect(() => {
@@ -49,17 +72,22 @@ export default function Layout() {
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, [initProjects, saveCurrentProjectNow]);
 
-  // Global keyboard shortcut: Ctrl+Shift+H / Cmd+Shift+H to toggle history
+  // Global keyboard shortcuts:
+  // - Ctrl+B / Cmd+B: toggle sidebar expand/collapse
+  // - Ctrl+Shift+H / Cmd+Shift+H: toggle history timeline
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'H' || e.key === 'h')) {
+      if ((e.ctrlKey || e.metaKey) && !e.shiftKey && (e.key === 'b' || e.key === 'B')) {
+        e.preventDefault();
+        toggleSidebar();
+      } else if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'H' || e.key === 'h')) {
         e.preventDefault();
         toggleTimeline();
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [toggleTimeline]);
+  }, [toggleSidebar, toggleTimeline]);
 
   if (loadError) {
     return (
@@ -83,7 +111,7 @@ export default function Layout() {
   }
 
   return (
-    <div className="h-screen w-screen flex flex-col bg-slate-950 text-slate-100 overflow-hidden font-sans">
+    <div className={`h-screen w-screen flex flex-col bg-slate-950 text-slate-100 overflow-hidden font-sans ${theme === 'light' ? 'light-theme' : 'dark-theme'}`}>
       {/* Top Header Bar */}
       <header className="h-12 border-b border-slate-800 bg-slate-900/90 backdrop-blur-md px-4 flex items-center justify-between shrink-0 select-none z-10">
         {/* Left: Branding & Project Menu */}
@@ -145,12 +173,26 @@ export default function Layout() {
           </button>
         </div>
 
-        {/* Right: Status, History & Settings */}
+        {/* Right: Status, Theme Toggle, History & Settings */}
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-800/60 border border-slate-700/50 text-[11px] font-mono text-slate-400 hidden md:flex">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
             <span>AI Editor</span>
           </div>
+
+          {/* Theme Toggle Button */}
+          <button
+            onClick={toggleTheme}
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 border border-slate-700/60 hover:border-slate-600 text-xs font-medium text-slate-300 hover:text-white transition-all shadow-xs cursor-pointer"
+            title={theme === 'dark' ? 'Switch to Light Theme' : 'Switch to Dark Theme'}
+          >
+            {theme === 'dark' ? (
+              <Sun className="w-3.5 h-3.5 text-amber-400" />
+            ) : (
+              <Moon className="w-3.5 h-3.5 text-indigo-400" />
+            )}
+            <span className="hidden md:inline capitalize">{theme === 'dark' ? 'Light' : 'Dark'}</span>
+          </button>
 
           <button
             onClick={toggleTimeline}
@@ -182,14 +224,42 @@ export default function Layout() {
       </header>
 
       {/* Main Resizable Area */}
-      <div className="flex-1 w-full overflow-hidden">
-        <PanelGroup direction="horizontal" className="h-full w-full">
-          {/* Panel 1: File Explorer */}
-          <Panel defaultSize={16} minSize={12} maxSize={28}>
-            <FileTree />
-          </Panel>
+      <div className="flex-1 w-full overflow-hidden flex">
+        {/* Collapsed Sidebar Mini-Strip */}
+        {isSidebarCollapsed && (
+          <div className="w-9 h-full bg-slate-900 border-r border-slate-800 flex flex-col items-center py-2 select-none shrink-0 gap-2.5 z-10 animate-in fade-in slide-in-from-left-2 duration-150">
+            <button
+              onClick={toggleSidebar}
+              className="p-1.5 rounded-lg bg-slate-800/80 hover:bg-indigo-600 text-slate-400 hover:text-white transition-all cursor-pointer group shadow-xs"
+              title="Expand Explorer Sidebar (Ctrl+B)"
+            >
+              <PanelLeftOpen className="w-3.5 h-3.5 text-indigo-400 group-hover:text-white" />
+            </button>
+            <div
+              onClick={toggleSidebar}
+              className="flex-1 w-full flex flex-col items-center justify-center cursor-pointer hover:bg-slate-800/50 rounded transition-colors group py-4"
+              title="Click to expand Explorer"
+            >
+              <div
+                className="text-[10px] font-semibold uppercase tracking-widest text-slate-500 group-hover:text-indigo-300 transition-colors select-none whitespace-nowrap font-mono"
+                style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}
+              >
+                Explorer
+              </div>
+            </div>
+          </div>
+        )}
 
-          <PanelResizeHandle className="w-1 bg-slate-800 hover:bg-indigo-500 active:bg-indigo-600 transition-colors cursor-col-resize select-none" />
+        <PanelGroup direction="horizontal" className="h-full w-full flex-1">
+          {/* Panel 1: File Explorer (when not collapsed) */}
+          {!isSidebarCollapsed && (
+            <>
+              <Panel defaultSize={16} minSize={12} maxSize={28}>
+                <FileTree />
+              </Panel>
+              <PanelResizeHandle className="w-1 bg-slate-800 hover:bg-indigo-500 active:bg-indigo-600 transition-colors cursor-col-resize select-none" />
+            </>
+          )}
 
           {/* Panel 2: Editor (Shown in 'code' or 'split' mode) */}
           {(viewMode === 'code' || viewMode === 'split') && (

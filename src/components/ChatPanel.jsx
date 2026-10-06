@@ -21,6 +21,7 @@ import { useChatStore } from '../store/useChatStore';
 import { useSettingsStore } from '../store/useSettingsStore';
 import { useProjectsStore } from '../store/useProjectsStore';
 import { useSnapshotStore } from '../store/useSnapshotStore';
+import { cleanPastedMarkdown } from '../lib/cleanMarkdown';
 import ChatMessage from './ChatMessage';
 import ImageAttachments from './ImageAttachments';
 import LearnToggle from './LearnToggle';
@@ -102,21 +103,52 @@ export default function ChatPanel() {
     }
   };
 
-  // Clipboard Paste handler (Ctrl+V of screenshot)
+  // Clipboard Paste handler (Ctrl+V of screenshot or ChatGPT/markdown text)
   const handlePaste = (e) => {
+    // 1. Attached image handling
     const items = e.clipboardData?.items;
-    if (!items) return;
+    if (items) {
+      const imageFiles = [];
+      for (let i = 0; i < items.length; i++) {
+        if (items[i].type.startsWith('image/')) {
+          const file = items[i].getAsFile();
+          if (file) imageFiles.push(file);
+        }
+      }
 
-    const imageFiles = [];
-    for (let i = 0; i < items.length; i++) {
-      if (items[i].type.startsWith('image/')) {
-        const file = items[i].getAsFile();
-        if (file) imageFiles.push(file);
+      if (imageFiles.length > 0) {
+        attachImages(imageFiles);
+        return;
       }
     }
 
-    if (imageFiles.length > 0) {
-      attachImages(imageFiles);
+    // 2. Formatted markdown / ChatGPT paste cleaning
+    const pastedText = e.clipboardData?.getData('text/plain');
+    if (!pastedText) return;
+
+    const cleanedText = cleanPastedMarkdown(pastedText);
+
+    if (cleanedText !== pastedText) {
+      e.preventDefault();
+      const textarea = textareaRef.current;
+      if (textarea) {
+        const start = textarea.selectionStart ?? 0;
+        const end = textarea.selectionEnd ?? 0;
+        const currentVal = textarea.value;
+        const newVal = currentVal.substring(0, start) + cleanedText + currentVal.substring(end);
+
+        setInputPrompt(newVal);
+
+        requestAnimationFrame(() => {
+          if (textareaRef.current) {
+            textareaRef.current.selectionStart = textareaRef.current.selectionEnd = start + cleanedText.length;
+            textareaRef.current.style.height = 'auto';
+            textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 120)}px`;
+          }
+        });
+      } else {
+        setInputPrompt((prev) => prev + cleanedText);
+      }
     }
   };
 

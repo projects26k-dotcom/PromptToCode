@@ -4,6 +4,7 @@ import { useProjectStore } from '../store/useProjectStore';
 import { usePendingStore } from '../store/usePendingStore';
 import { useSnapshotStore } from '../store/useSnapshotStore';
 import { useChatStore } from '../store/useChatStore';
+import { useSettingsStore } from '../store/useSettingsStore';
 import { getLanguage } from '../lib/language';
 import { Code2, Sparkles, FilePlus, Lock, HelpCircle } from 'lucide-react';
 import DiffReview from './DiffReview';
@@ -12,6 +13,7 @@ import PendingChangesBar from './PendingChangesBar';
 export default function CodeEditor() {
   const { files, activeFile, updateFileContent, createFile } = useProjectStore();
   const { reviewingFile, pending } = usePendingStore();
+  const { theme } = useSettingsStore();
   const previewingSnapshot = useSnapshotStore((state) => state.previewingSnapshot);
   const sendExplainSelectionRequest = useChatStore((state) => state.sendExplainSelectionRequest);
 
@@ -157,7 +159,7 @@ export default function CodeEditor() {
         <Editor
           height="100%"
           width="100%"
-          theme="vs-dark"
+          theme={theme === 'dark' ? 'vs-dark' : 'light'}
           path={activeFile}
           keepCurrentModel={true}
           language={language}

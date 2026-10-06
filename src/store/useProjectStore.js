@@ -115,13 +115,15 @@ btn?.addEventListener('click', () => {
 
 export const useProjectStore = create((set, get) => ({
   files: defaultFiles,
+  emptyFolders: [],
   openTabs: ['index.html', 'style.css', 'script.js'],
   activeFile: 'index.html',
 
   // Load project snapshot from IndexedDB
-  loadProjectData: ({ files, openTabs, activeFile }) => {
+  loadProjectData: ({ files, openTabs, activeFile, emptyFolders }) => {
     set({
       files: files || {},
+      emptyFolders: emptyFolders || [],
       openTabs: openTabs || [],
       activeFile: activeFile || null,
     });
@@ -211,6 +213,129 @@ export const useProjectStore = create((set, get) => ({
       },
       openTabs: [...openTabs, cleanPath],
       activeFile: cleanPath,
+    });
+
+    try {
+      useProjectsStore.getState().scheduleAutoSave();
+    } catch {}
+  },
+
+  // Create a new folder
+  createFolder: (folderPath) => {
+    let clean = folderPath.trim().replace(/^\/+|\/+$/g, '');
+    if (!clean) return;
+    const cleanPath = clean.startsWith('/') ? clean : `/${clean}`;
+
+    const { emptyFolders } = get();
+    if (!emptyFolders.includes(cleanPath)) {
+      set({ emptyFolders: [...emptyFolders, cleanPath] });
+    }
+
+    try {
+      useProjectsStore.getState().scheduleAutoSave();
+    } catch {}
+  },
+
+  // Delete a folder and all contained files
+  deleteFolder: (folderPath) => {
+    let clean = folderPath.trim().replace(/^\/+|\/+$/g, '');
+    if (!clean) return;
+
+    const { files, openTabs, activeFile, emptyFolders } = get();
+    const prefixSlash = `/${clean}/`;
+    const prefixNoSlash = `${clean}/`;
+
+    const newFiles = { ...files };
+    const filesToDelete = [];
+
+    for (const key of Object.keys(files)) {
+      const normalizedKey = key.startsWith('/') ? key : `/${key}`;
+      if (
+        normalizedKey === `/${clean}` ||
+        normalizedKey.startsWith(prefixSlash) ||
+        key.startsWith(prefixNoSlash)
+      ) {
+        delete newFiles[key];
+        filesToDelete.push(key);
+        try {
+          usePendingStore.getState().clearPendingForFile(key);
+        } catch {}
+      }
+    }
+
+    const newEmptyFolders = emptyFolders.filter((f) => {
+      const norm = f.startsWith('/') ? f : `/${f}`;
+      return norm !== `/${clean}` && !norm.startsWith(prefixSlash);
+    });
+
+    const updatedTabs = openTabs.filter((t) => !filesToDelete.includes(t));
+    let nextActive = activeFile;
+    if (filesToDelete.includes(activeFile)) {
+      nextActive = updatedTabs.length > 0 ? updatedTabs[0] : null;
+    }
+
+    set({
+      files: newFiles,
+      emptyFolders: newEmptyFolders,
+      openTabs: updatedTabs,
+      activeFile: nextActive,
+    });
+
+    try {
+      useProjectsStore.getState().scheduleAutoSave();
+    } catch {}
+  },
+
+  // Rename a folder and all contained files
+  renameFolder: (oldPath, newPath) => {
+    let cleanOld = oldPath.trim().replace(/^\/+|\/+$/g, '');
+    let cleanNew = newPath.trim().replace(/^\/+|\/+$/g, '');
+    if (!cleanOld || !cleanNew || cleanOld === cleanNew) return;
+
+    const { files, openTabs, activeFile, emptyFolders } = get();
+    const oldPrefix = `/${cleanOld}/`;
+    const newPrefix = `/${cleanNew}/`;
+
+    const newFiles = {};
+    const tabMap = {};
+
+    for (const [key, val] of Object.entries(files)) {
+      const normalizedKey = key.startsWith('/') ? key : `/${key}`;
+      if (normalizedKey === `/${cleanOld}` || normalizedKey.startsWith(oldPrefix)) {
+        const remaining = normalizedKey.slice(oldPrefix.length);
+        const replaced = `${newPrefix}${remaining}`;
+        const finalKey = key.startsWith('/') ? replaced : replaced.replace(/^\//, '');
+        newFiles[finalKey] = val;
+        tabMap[key] = finalKey;
+        try {
+          usePendingStore.getState().clearPendingForFile(key);
+        } catch {}
+      } else {
+        newFiles[key] = val;
+      }
+    }
+
+    const newEmptyFolders = emptyFolders.map((f) => {
+      const norm = f.startsWith('/') ? f : `/${f}`;
+      if (norm === `/${cleanOld}`) {
+        return f.startsWith('/') ? `/${cleanNew}` : cleanNew;
+      }
+      if (norm.startsWith(oldPrefix)) {
+        const remaining = norm.slice(oldPrefix.length);
+        const replaced = `${newPrefix}${remaining}`;
+        return f.startsWith('/') ? replaced : replaced.replace(/^\//, '');
+      }
+      return f;
+    });
+
+    const newTabs = openTabs.map((t) => tabMap[t] || t);
+    const nextActive = tabMap[activeFile] || activeFile;
+
+    set({
+      files: newFiles,
+      emptyFolders: newEmptyFolders,
+      openTabs: newTabs,
+      activeFile: nextActive,
     });
 
     try {

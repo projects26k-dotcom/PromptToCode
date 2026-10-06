@@ -54,6 +54,8 @@ export const useSettingsStore = create(
       reactRunnerMode: 'builtin', // 'builtin' | 'sandpack' (default: builtin)
       previewRunner: 'builtin',
       isSettingsOpen: false,
+      isSidebarCollapsed: false,
+      theme: 'dark', // 'dark' | 'light'
 
       setGeminiKey: (geminiKey) => set({ geminiKey: geminiKey.trim() }),
       setModel: (selectedModel) =>
@@ -76,6 +78,12 @@ export const useSettingsStore = create(
       closeSettings: () => set({ isSettingsOpen: false }),
       toggleSettings: () =>
         set((state) => ({ isSettingsOpen: !state.isSettingsOpen })),
+      toggleSidebar: () =>
+        set((state) => ({ isSidebarCollapsed: !state.isSidebarCollapsed })),
+      setSidebarCollapsed: (isSidebarCollapsed) => set({ isSidebarCollapsed }),
+      toggleTheme: () =>
+        set((state) => ({ theme: state.theme === 'dark' ? 'light' : 'dark' })),
+      setTheme: (theme) => set({ theme }),
     }),
     {
       name: 'prompttocode-settings',

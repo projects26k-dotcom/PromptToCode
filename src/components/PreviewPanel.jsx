@@ -70,7 +70,7 @@ export default function PreviewPanel() {
   const { files } = useProjectStore();
   const { currentProjectType } = useProjectsStore();
   const { isStreaming, sendFixRequest } = useChatStore();
-  const { reactRunnerMode, setReactRunnerMode, autoFix } = useSettingsStore();
+  const { reactRunnerMode, setReactRunnerMode, autoFix, theme } = useSettingsStore();
   const { clearLogs, addLog, latestError, getFixAttempts, dismissError } = useConsoleStore();
   const { pending } = usePendingStore();
   const { previewingSnapshot, exitPreview, openRestoreDialog } = useSnapshotStore();
@@ -80,7 +80,7 @@ export default function PreviewPanel() {
   const iframeRef = useRef(null);
   const [deviceMode, setDeviceMode] = useState('desktop'); // 'desktop' | 'tablet' | 'mobile'
   const [previewHtml, setPreviewHtml] = useState(() => 
-    currentProjectType === 'react' ? buildReactPreviewHtml(activeFiles) : buildPreviewHtml(activeFiles)
+    currentProjectType === 'react' ? buildReactPreviewHtml(activeFiles, theme) : buildPreviewHtml(activeFiles, theme)
   );
   const [reloadKey, setReloadKey] = useState(0);
   const [isReactConsoleOpen, setIsReactConsoleOpen] = useState(true);
@@ -213,8 +213,8 @@ export default function PreviewPanel() {
 
     const generateHtml = () => {
       return currentProjectType === 'react'
-        ? buildReactPreviewHtml(activeFiles)
-        : buildPreviewHtml(activeFiles);
+        ? buildReactPreviewHtml(activeFiles, theme)
+        : buildPreviewHtml(activeFiles, theme);
     };
 
     if (prevStreamingRef.current && !isStreaming) {
@@ -235,7 +235,7 @@ export default function PreviewPanel() {
     }, 600);
 
     return () => clearTimeout(timeout);
-  }, [activeFiles, isStreaming, clearLogs, currentProjectType, isBuiltinRunner]);
+  }, [activeFiles, isStreaming, clearLogs, currentProjectType, isBuiltinRunner, theme]);
 
   // Force reload handler
   const handleReload = () => {
@@ -246,8 +246,8 @@ export default function PreviewPanel() {
       clearLogs();
       setPreviewHtml(
         currentProjectType === 'react'
-          ? buildReactPreviewHtml(activeFiles)
-          : buildPreviewHtml(activeFiles)
+          ? buildReactPreviewHtml(activeFiles, theme)
+          : buildPreviewHtml(activeFiles, theme)
       );
       setReloadKey((k) => k + 1);
     }
@@ -256,8 +256,8 @@ export default function PreviewPanel() {
   // Open in new tab handler
   const handleOpenNewTab = () => {
     const html = currentProjectType === 'react' && reactRunnerMode === 'builtin'
-      ? buildReactPreviewHtml(activeFiles)
-      : buildPreviewHtml(activeFiles);
+      ? buildReactPreviewHtml(activeFiles, theme)
+      : buildPreviewHtml(activeFiles, theme);
     const blob = new Blob([html], { type: 'text/html' });
     const url = URL.createObjectURL(blob);
     window.open(url, '_blank');
@@ -266,8 +266,8 @@ export default function PreviewPanel() {
   // Sanitize files for Sandpack React engine
   const { files: sandpackFiles, warnings: sandpackWarnings } = useMemo(() => {
     if (currentProjectType !== 'react') return { files: {}, warnings: [] };
-    return sanitizeSandpackFiles(activeFiles);
-  }, [activeFiles, currentProjectType]);
+    return sanitizeSandpackFiles(activeFiles, theme);
+  }, [activeFiles, currentProjectType, theme]);
 
   const handleSandpackTimeout = useCallback(() => {
     setIsSandpackBlocked(true);
@@ -482,9 +482,9 @@ export default function PreviewPanel() {
             /* React Sandpack Runner wrapped in ErrorBoundary */
             <SandpackErrorBoundary onReset={() => setSandpackKey((k) => k + 1)}>
               <SandpackProvider
-                key={sandpackKey}
+                key={`${sandpackKey}-${theme}`}
                 template="react"
-                theme="dark"
+                theme={theme === 'dark' ? 'dark' : 'light'}
                 files={sandpackFiles}
                 options={{
                   initMode: 'immediate',

@@ -96,9 +96,10 @@ function injectReactImportsIfNeeded(code) {
  * Sanitizes and formats files for Sandpack React template.
  * Prevents invalid JSON or missing entry files from crashing Sandpack.
  */
-export function sanitizeSandpackFiles(files = {}) {
+export function sanitizeSandpackFiles(files = {}, theme = 'dark') {
   const sanitized = {};
   let warnings = [];
+  const isLight = theme === 'light';
 
   // Normalize all paths to have leading slashes
   for (const [rawPath, content] of Object.entries(files)) {
@@ -163,6 +164,40 @@ export function sanitizeSandpackFiles(files = {}) {
   // Ensure /styles.css exists
   if (!sanitized['/styles.css']) {
     sanitized['/styles.css'] = { code: DEFAULT_STYLES_CSS };
+  }
+
+  // If light theme is active, inject light mode styles into styles.css and index.html
+  if (isLight) {
+    const lightCssRules = `\n/* Light Theme Mode Injected */
+body {
+  background: #f8fafc !important;
+  color: #0f172a !important;
+}
+.card {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  color: #0f172a !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08) !important;
+}
+.tagline {
+  color: #64748b !important;
+}
+#output, .output {
+  color: #0284c7 !important;
+}
+`;
+    if (sanitized['/styles.css']) {
+      sanitized['/styles.css'] = {
+        code: sanitized['/styles.css'].code + lightCssRules
+      };
+    }
+    const htmlKey = sanitized['/public/index.html'] ? '/public/index.html' : sanitized['/index.html'] ? '/index.html' : null;
+    if (htmlKey && sanitized[htmlKey]) {
+      const styleTag = `<style id="sandpack-light-theme">${lightCssRules}</style>`;
+      sanitized[htmlKey] = {
+        code: sanitized[htmlKey].code.replace('</head>', `${styleTag}</head>`)
+      };
+    }
   }
 
   return { files: sanitized, warnings };

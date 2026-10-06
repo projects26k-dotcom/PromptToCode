@@ -201,8 +201,9 @@ const CONSOLE_BRIDGE_SCRIPT = `
  * Builds a single standalone HTML string for the iframe srcdoc by inlining
  * local CSS and JS files and injecting the console bridge.
  */
-export function buildPreviewHtml(files = {}) {
+export function buildPreviewHtml(files = {}, theme = 'dark') {
   let html = files['index.html'];
+  const isLight = theme === 'light';
 
   if (!html || typeof html !== 'string' || !html.trim()) {
     return `<!DOCTYPE html>
@@ -215,21 +216,22 @@ export function buildPreviewHtml(files = {}) {
       min-height: 100vh;
       display: grid;
       place-items: center;
-      background: #090d16;
-      color: #94a3b8;
+      background: ${isLight ? '#f8fafc' : '#090d16'};
+      color: ${isLight ? '#475569' : '#94a3b8'};
       font-family: system-ui, -apple-system, sans-serif;
       text-align: center;
       padding: 2rem;
       box-sizing: border-box;
     }
     .card {
-      background: #0f172a;
-      border: 1px solid #1e293b;
+      background: ${isLight ? '#ffffff' : '#0f172a'};
+      border: 1px solid ${isLight ? '#e2e8f0' : '#1e293b'};
       padding: 2.5rem;
       border-radius: 1rem;
       max-width: 400px;
+      box-shadow: ${isLight ? '0 10px 25px -5px rgba(0,0,0,0.08)' : 'none'};
     }
-    h2 { color: #f1f5f9; margin-top: 0; font-size: 1.25rem; }
+    h2 { color: ${isLight ? '#0f172a' : '#f1f5f9'}; margin-top: 0; font-size: 1.25rem; }
     p { font-size: 0.875rem; line-height: 1.5; color: #64748b; }
   </style>
 </head>
@@ -285,7 +287,34 @@ export function buildPreviewHtml(files = {}) {
     html = `${CONSOLE_BRIDGE_SCRIPT}\n${html}`;
   }
 
-  // 4. Inject ready event at the bottom of the body
+  // 4. Inject light mode template styling override if light mode
+  if (isLight) {
+    const lightStyle = `<style id="light-theme-injected">
+      body {
+        background: #f8fafc !important;
+        color: #0f172a !important;
+      }
+      .card {
+        background: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+        color: #0f172a !important;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08) !important;
+      }
+      .tagline {
+        color: #64748b !important;
+      }
+      #output {
+        color: #0284c7 !important;
+      }
+    </style>`;
+    if (/<\/head[^>]*>/i.test(html)) {
+      html = html.replace(/<\/head[^>]*>/i, (match) => `${lightStyle}\n${match}`);
+    } else {
+      html = `${lightStyle}\n${html}`;
+    }
+  }
+
+  // 5. Inject ready event at the bottom of the body
   const READY_SCRIPT = `<script>try{window.parent.postMessage({source:'prompttocode-preview',type:'ready'},'*');}catch(e){}</script>`;
   if (/<\/body[^>]*>/i.test(html)) {
     html = html.replace(/<\/body[^>]*>/i, (match) => `${READY_SCRIPT}\n${match}`);

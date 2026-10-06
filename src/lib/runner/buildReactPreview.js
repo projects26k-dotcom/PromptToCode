@@ -17,8 +17,9 @@ function serializeForScript(obj) {
     .replace(/<\/script/gi, '<\\/script');
 }
 
-export function buildReactPreviewHtml(files = {}) {
+export function buildReactPreviewHtml(files = {}, theme = 'dark') {
   const safeSourcesJson = serializeForScript(files);
+  const isLight = theme === 'light';
 
   const html = `<!DOCTYPE html>
 <html lang="en">
@@ -34,16 +35,16 @@ export function buildReactPreviewHtml(files = {}) {
     body {
       margin: 0;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: #0f172a;
-      color: #f8fafc;
+      background: ${isLight ? '#f8fafc' : '#0f172a'};
+      color: ${isLight ? '#0f172a' : '#f8fafc'};
       min-height: 100vh;
     }
     #error-overlay {
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(15, 23, 42, 0.95);
-      color: #f87171;
+      background: ${isLight ? 'rgba(255, 255, 255, 0.95)' : 'rgba(15, 23, 42, 0.95)'};
+      color: #ef4444;
       padding: 24px;
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
       font-size: 13px;
@@ -53,6 +54,25 @@ export function buildReactPreviewHtml(files = {}) {
       white-space: pre-wrap;
       border-top: 4px solid #ef4444;
     }
+    ${isLight ? `
+    /* Light Mode Template Card Overrides */
+    body {
+      background: #f8fafc !important;
+      color: #0f172a !important;
+    }
+    .card {
+      background: #ffffff !important;
+      border: 1px solid #e2e8f0 !important;
+      color: #0f172a !important;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08) !important;
+    }
+    .tagline {
+      color: #64748b !important;
+    }
+    #output {
+      color: #0284c7 !important;
+    }
+    ` : ''}
   </style>
 </head>
 <body>
