@@ -13,7 +13,8 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
   Sun,
-  Moon
+  Moon,
+  Home
 } from 'lucide-react';
 import FileTree from './FileTree';
 import EditorTabs from './EditorTabs';
@@ -29,7 +30,7 @@ import { useSettingsStore } from '../store/useSettingsStore';
 import { useProjectsStore } from '../store/useProjectsStore';
 import { useSnapshotStore } from '../store/useSnapshotStore';
 
-export default function Layout() {
+export default function Layout({ onBackToLanding }) {
   const {
     viewMode,
     setViewMode,
@@ -131,6 +132,20 @@ export default function Layout() {
 
           {/* Project Menu & Auto-Save */}
           <ProjectMenu />
+
+          {onBackToLanding && (
+            <>
+              <div className="h-4 w-[1px] bg-slate-800 hidden sm:block" />
+              <button
+                onClick={onBackToLanding}
+                title="Return to Landing Page"
+                className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium text-slate-400 hover:text-slate-100 hover:bg-slate-800 transition-colors cursor-pointer border border-transparent hover:border-slate-700"
+              >
+                <Home className="w-3.5 h-3.5 text-purple-400" />
+                <span className="hidden sm:inline">Landing</span>
+              </button>
+            </>
+          )}
         </div>
 
         {/* Center: View Mode Switcher */}

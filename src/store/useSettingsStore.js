@@ -161,6 +161,7 @@ export const useSettingsStore = create(
         maxFixAttempts: state.maxFixAttempts || 3,
         reactRunnerMode: state.reactRunnerMode || 'builtin',
         previewRunner: state.reactRunnerMode || 'builtin',
+        theme: state.theme || 'dark',
       }),
     }
   )
