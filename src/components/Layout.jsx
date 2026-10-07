@@ -29,6 +29,7 @@ import RestoreDialog from './RestoreDialog';
 import { useSettingsStore } from '../store/useSettingsStore';
 import { useProjectsStore } from '../store/useProjectsStore';
 import { useSnapshotStore } from '../store/useSnapshotStore';
+import { AuthNavControls } from './ClerkAuthProvider';
 
 export default function Layout({ onBackToLanding }) {
   const {
@@ -235,6 +236,11 @@ export default function Layout({ onBackToLanding }) {
             <Settings className="w-3.5 h-3.5 text-indigo-400" />
             <span className="hidden md:inline">Settings</span>
           </button>
+
+          {/* Clerk User & Auth Controls in IDE Header */}
+          <div className="pl-1 border-l border-slate-800">
+            <AuthNavControls />
+          </div>
         </div>
       </header>
 

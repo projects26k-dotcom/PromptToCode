@@ -28,6 +28,7 @@ import {
   Moon
 } from 'lucide-react';
 import { useSettingsStore } from '../store/useSettingsStore';
+import { AuthNavControls } from './ClerkAuthProvider';
 
 const HERO_CODE_SAMPLE = `import React, { useState } from 'react';
 
@@ -268,7 +269,7 @@ export default function LandingPage({ onLaunchApp }) {
             </button>
           </nav>
 
-          {/* Action CTA & Theme Toggle */}
+          {/* Action CTA, Auth & Theme Toggle */}
           <div className="hidden md:flex items-center gap-3">
             <button
               onClick={toggleTheme}
@@ -282,6 +283,9 @@ export default function LandingPage({ onLaunchApp }) {
                 <Moon className="w-4 h-4 text-indigo-400" />
               )}
             </button>
+
+            {/* Clerk Authentication Controls */}
+            <AuthNavControls />
 
             <button
               onClick={handleLaunch}
@@ -354,6 +358,13 @@ export default function LandingPage({ onLaunchApp }) {
             >
               FAQ
             </button>
+            
+            {/* Mobile Auth Controls */}
+            <div className="pt-2 border-t border-white/10 flex items-center justify-between">
+              <span className="text-xs text-slate-400">Account:</span>
+              <AuthNavControls />
+            </div>
+
             <div className="pt-2 flex items-center gap-2">
               <button
                 onClick={toggleTheme}

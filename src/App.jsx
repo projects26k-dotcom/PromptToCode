@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import Layout from './components/Layout';
 import LandingPage from './components/LandingPage';
 import { useSettingsStore } from './store/useSettingsStore';
+import { useAuthStatus, ProtectedAuthGate } from './components/ClerkAuthProvider';
 
 export default function App() {
-  const { theme, toggleTheme } = useSettingsStore();
+  const { theme } = useSettingsStore();
+  const { hasClerkKey, isSignedIn, isLoaded, openSignIn } = useAuthStatus();
 
   // Sync theme with document root element
   useEffect(() => {
@@ -43,6 +45,11 @@ export default function App() {
   }, []);
 
   const launchEditor = () => {
+    // If Clerk is configured and user is not logged in, prompt sign in
+    if (hasClerkKey && isLoaded && !isSignedIn) {
+      openSignIn();
+      return;
+    }
     window.location.hash = '#editor';
     setCurrentView('editor');
   };
@@ -53,9 +60,14 @@ export default function App() {
   };
 
   if (currentView === 'editor') {
+    // If Clerk is enabled and user is not signed in, gate access
+    if (hasClerkKey && isLoaded && !isSignedIn) {
+      return <ProtectedAuthGate onBackToLanding={backToLanding} />;
+    }
     return <Layout onBackToLanding={backToLanding} />;
   }
 
   return <LandingPage onLaunchApp={launchEditor} />;
 }
+
 
