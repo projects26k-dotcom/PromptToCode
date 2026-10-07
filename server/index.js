@@ -1,3 +1,4 @@
+// PromptToCode Backend Server
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -21,7 +22,7 @@ app.use(express.json());
 app.get('/api/config', (req, res) => {
   // Always read latest .env on config requests
   dotenv.config({ path: join(__dirname, '../.env'), override: true });
-  
+
   const clerkPublishableKey = (
     process.env.CLERK_PUBLISHABLE_KEY ||
     process.env.VITE_CLERK_PUBLISHABLE_KEY ||
