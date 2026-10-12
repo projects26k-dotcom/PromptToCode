@@ -21,7 +21,9 @@ app.use(express.json());
 // Public configuration endpoint (shares publishable key securely from backend)
 app.get('/api/config', (req, res) => {
   // Always read latest .env on config requests
-  dotenv.config({ path: join(__dirname, '../.env'), override: true });
+  if (process.env.NODE_ENV !== 'production') {
+    dotenv.config({ path: join(__dirname, '../.env'), override: true });
+  }
 
   const clerkPublishableKey = (
     process.env.CLERK_PUBLISHABLE_KEY ||
