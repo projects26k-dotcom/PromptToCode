@@ -11,6 +11,7 @@ import {
 } from '@clerk/clerk-react';
 import { dark } from '@clerk/themes';
 import { useSettingsStore } from '../store/useSettingsStore';
+import { useSyncUser } from '../lib/useSyncUser';
 
 const AuthContext = createContext({
   isLoaded: false,
@@ -28,6 +29,9 @@ export const useAuthStatus = () => useContext(AuthContext);
 function ClerkAuthBridge({ children, clerkKey }) {
   const { isLoaded, isSignedIn, user } = useClerkUser();
   const clerk = useClerk();
+
+  // Automatically sync signed-in / signed-up user with MongoDB
+  useSyncUser(user, isSignedIn);
 
   const handleOpenSignIn = (opts) => {
     if (clerk && clerk.openSignIn) {
